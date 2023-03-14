@@ -109,9 +109,13 @@ uart:
 
 ###### REBOOT BUTTON #####
 button:
+
   - platform: restart
     name: ${device_name} Restart
     id: restart_nspanel
+
+  - platform: factory_reset
+    name: Restart with Factory Default Settings
 
 
 ##### START - API CONFIGURATION #####
