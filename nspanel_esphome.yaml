@@ -84,8 +84,12 @@ ota:
 
 ##### LOGGER #####
 logger:
-#  baud_rate: 0
- level: WARN
+  level: DEBUG
+  logs:
+    sensor: DEBUG
+    resistance: DEBUG
+    text_sensor: DEBUG
+    ntc: DEBUG
 
 ##### CONFIGURE INTERNAL BUZZER #####
 output:
@@ -954,6 +958,10 @@ display:
     tft_url: ${nextion_update_url}
     on_setup:
       then:
+
+        - lambda: id(disp1).send_command_printf("lcd_dev fffb 0002 0000 0020"); # Magic command to avoid 32pixel touchscreen offset on NSPanel (https://github.com/UNUF/nxt-doc/blob/main/Protocols/Full%20Instruction%20Set.md#readme)
+        - lambda: id(disp1).send_command_printf("DRAKJHSUYDGBNCJHGJKSHBDN");
+
         - lambda: id(disp1).send_command_printf("page 8");
         - lambda: id(disp1).set_component_text_printf("boot.esph_version", "%s", "3.1.0"); ### esphome-version ###
         - wait_until:
