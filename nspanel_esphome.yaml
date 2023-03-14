@@ -90,10 +90,10 @@ ota:
 logger:
   level: DEBUG
   logs:
-    sensor: WARN
-    resistance: WARN
-    text_sensor: WARN
-    ntc: WARN
+    sensor: DEBUG
+    resistance: DEBUG
+    text_sensor: DEBUG
+    ntc: DEBUG
 
 ##### CONFIGURE INTERNAL BUZZER #####
 output:
