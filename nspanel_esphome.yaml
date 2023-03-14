@@ -128,166 +128,166 @@ button:
     name: Restart with Factory Default Settings
 
 
-# ##### START - API CONFIGURATION #####
-# api:
-#   ##### advanced config - activate to use api_password ##### 
-#   # password: ${api_password}
-#   services:
+##### START - API CONFIGURATION #####
+api:
+  ##### advanced config - activate to use api_password ##### 
+  # password: ${api_password}
+  services:
 
-#     ##### SERVICE TO UPDATE THE HMI FILE #####
-#     - service: upload_tft
-#       then:
-#         - lambda: 'id(disp1)->upload_tft();'
+    ##### SERVICE TO UPDATE THE HMI FILE #####
+    - service: upload_tft
+      then:
+        - lambda: 'id(disp1)->upload_tft();'
 
-#     ##### SERVICE TO UPDATE THE TFT FILE from URL #####
-#     - service: upload_tft_url
-#       variables:
-#         url: string
-#       then:
-#         - lambda: 'id(disp1)->set_tft_url(url.c_str());'
-#         - lambda: 'id(disp1)->upload_tft();'
+    ##### SERVICE TO UPDATE THE TFT FILE from URL #####
+    - service: upload_tft_url
+      variables:
+        url: string
+      then:
+        - lambda: 'id(disp1)->set_tft_url(url.c_str());'
+        - lambda: 'id(disp1)->upload_tft();'
             
-#     ##### Service to send a command "printf" directly to the display #####
-#     - service: send_command_printf
-#       variables:
-#         cmd: string
-#       then:
-#         - lambda: 'id(disp1).send_command_printf("%s", cmd.c_str());'
+    ##### Service to send a command "printf" directly to the display #####
+    - service: send_command_printf
+      variables:
+        cmd: string
+      then:
+        - lambda: 'id(disp1).send_command_printf("%s", cmd.c_str());'
 
-#     ##### Service to send a command "text_printf" directly to the display #####
-#     - service: send_command_text_printf
-#       variables:
-#         component: string
-#         message: string
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).set_component_text_printf(component.c_str(), "%s", message.c_str());'
+    ##### Service to send a command "text_printf" directly to the display #####
+    - service: send_command_text_printf
+      variables:
+        component: string
+        message: string
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).set_component_text_printf(component.c_str(), "%s", message.c_str());'
 
-#     ##### Service to send a command "component_value (Dualstate Button)" directly to the display #####
-#     - service: send_command_value
-#       variables:
-#         component: string
-#         message: int
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).set_component_value(component.c_str(), message);'
+    ##### Service to send a command "component_value (Dualstate Button)" directly to the display #####
+    - service: send_command_value
+      variables:
+        component: string
+        message: int
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).set_component_value(component.c_str(), message);'
 
-#     ##### Service to send a command "hide componente" directly to the display #####
-#     - service: send_command_hide
-#       variables:
-#         component: string
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).hide_component(component.c_str());'
+    ##### Service to send a command "hide componente" directly to the display #####
+    - service: send_command_hide
+      variables:
+        component: string
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).hide_component(component.c_str());'
 
-#     ##### Service to send a command "show componente" directly to the display #####
-#     - service: send_command_show
-#       variables:
-#         component: string
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).show_component(component.c_str());'
+    ##### Service to send a command "show componente" directly to the display #####
+    - service: send_command_show
+      variables:
+        component: string
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).show_component(component.c_str());'
 
-#     ##### Service to send a command "font color" directly to the display #####
-#     - service: send_command_font_color
-#       variables:
-#         component: string
-#         message: int
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).set_component_font_color(component.c_str(), message);'
+    ##### Service to send a command "font color" directly to the display #####
+    - service: send_command_font_color
+      variables:
+        component: string
+        message: int
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).set_component_font_color(component.c_str(), message);'
     
-#     ##### Service to send a command "background color" directly to the display #####
-#     - service: send_command_background_color
-#       variables:
-#         component: string
-#         message: int
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: 'id(disp1).set_component_background_color(component.c_str(), message);'
+    ##### Service to send a command "background color" directly to the display #####
+    - service: send_command_background_color
+      variables:
+        component: string
+        message: int
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).set_component_background_color(component.c_str(), message);'
 
-#     ##### Service to show a notification-message on the screen #####
-#     - service: notification_show
-#       variables:
-#         label: string
-#         text: string
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: |-
-#             id(disp1).send_command_printf("page notification");
-#             id(disp1).set_component_text_printf("notification.notifi_label", "%s", label.c_str());
-#             id(disp1).set_component_text_printf("notification.notifi_text01", "%s", text.c_str());
-#             id(notification_label).publish_state(label.c_str());
-#             id(notification_text).publish_state(text.c_str());
-#         - switch.turn_on: notification_unread
-#         - if:
-#             condition:
-#               switch.is_on: notification_sound
-#             then:
-#               - rtttl.play: "two short:d=4,o=5,b=100:16e6,16e6"
+    ##### Service to show a notification-message on the screen #####
+    - service: notification_show
+      variables:
+        label: string
+        text: string
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: |-
+            id(disp1).send_command_printf("page notification");
+            id(disp1).set_component_text_printf("notification.notifi_label", "%s", label.c_str());
+            id(disp1).set_component_text_printf("notification.notifi_text01", "%s", text.c_str());
+            id(notification_label).publish_state(label.c_str());
+            id(notification_text).publish_state(text.c_str());
+        - switch.turn_on: notification_unread
+        - if:
+            condition:
+              switch.is_on: notification_sound
+            then:
+              - rtttl.play: "two short:d=4,o=5,b=100:16e6,16e6"
 
-#     ##### Service to clear the notification #####
-#     - service: notification_clear
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: |-
-#             id(notification_label).publish_state("");
-#             id(notification_text).publish_state("");
-#         - switch.turn_off: notification_unread
+    ##### Service to clear the notification #####
+    - service: notification_clear
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: |-
+            id(notification_label).publish_state("");
+            id(notification_text).publish_state("");
+        - switch.turn_off: notification_unread
 
-#     ##### Service to play a rtttl tones #####
-#     # Example tones : https://codebender.cc/sketch:109888#RTTTL%20Songs.ino
-#     - service: play_rtttl
-#       variables:
-#         song_str: string
-#       then:
-#         - rtttl.play:
-#             rtttl: !lambda 'return song_str;'    
+    ##### Service to play a rtttl tones #####
+    # Example tones : https://codebender.cc/sketch:109888#RTTTL%20Songs.ino
+    - service: play_rtttl
+      variables:
+        song_str: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return song_str;'    
 
-#     # Service to show a QR code on the display (ex. for WiFi password)
-#     - service: qr_code
-#       variables:
-#         qrdata: string
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: |-
-#             id(disp1).send_command_printf("page qrcode");
-#             id(disp1).set_component_text_printf("qrcode.qrcode_value", "%s", qrdata.c_str());
+    # Service to show a QR code on the display (ex. for WiFi password)
+    - service: qr_code
+      variables:
+        qrdata: string
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: |-
+            id(disp1).send_command_printf("page qrcode");
+            id(disp1).set_component_text_printf("qrcode.qrcode_value", "%s", qrdata.c_str());
 
-#     #### Service to send thermostat cycle state ####
-#     - service: send_thermostat_cycle_state
-#       variables:
-#         value: float
-#       then:
-#         - wait_until:
-#               switch.is_on: nextion_init
-#         - lambda: |-
-#             //ESP_LOGD("nextion", "thermostat sendig value %f", value);
-#             int v = int(2 * std::min(std::max(value - 13.5, 0.0), 5.0));
-#             int left = v + (v ? 19 : 16); // 16 is empty left.
-#             v = int(2 * std::min(std::max(value - 18.0, 0.0), 4.0));
-#             int mid = v + (v ? 29 : 17); // 17 is empty mid.
-#             v = int(2 * std::min(std::max(value - 21.5, 0.0), 5.5));
-#             int right = v + (v ? 37 : 18); // 18 is empty right.
-#             // sends the 3 images to the display
-#             //ESP_LOGD("nextion", "thermostat left %i", left);
-#             //ESP_LOGD("nextion", "thermostat mid %i", mid);
-#             //ESP_LOGD("nextion", "thermostat right %i", right);
-#             id(disp1).send_command_printf("climate_left.pic=%i", left);
-#             id(disp1).send_command_printf("climate_middle.pic=%i", mid);
-#             id(disp1).send_command_printf("climate_right.pic=%i", right);
-#             // send target-temp
-#             id(disp1).set_component_text_printf("target_temp", "%.1f°", value);
-#             id(display_target_temp).publish_state(value);
+    #### Service to send thermostat cycle state ####
+    - service: send_thermostat_cycle_state
+      variables:
+        value: float
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: |-
+            //ESP_LOGD("nextion", "thermostat sendig value %f", value);
+            int v = int(2 * std::min(std::max(value - 13.5, 0.0), 5.0));
+            int left = v + (v ? 19 : 16); // 16 is empty left.
+            v = int(2 * std::min(std::max(value - 18.0, 0.0), 4.0));
+            int mid = v + (v ? 29 : 17); // 17 is empty mid.
+            v = int(2 * std::min(std::max(value - 21.5, 0.0), 5.5));
+            int right = v + (v ? 37 : 18); // 18 is empty right.
+            // sends the 3 images to the display
+            //ESP_LOGD("nextion", "thermostat left %i", left);
+            //ESP_LOGD("nextion", "thermostat mid %i", mid);
+            //ESP_LOGD("nextion", "thermostat right %i", right);
+            id(disp1).send_command_printf("climate_left.pic=%i", left);
+            id(disp1).send_command_printf("climate_middle.pic=%i", mid);
+            id(disp1).send_command_printf("climate_right.pic=%i", right);
+            // send target-temp
+            id(disp1).set_component_text_printf("target_temp", "%.1f°", value);
+            id(display_target_temp).publish_state(value);
 
 
 ##### START - GLOBALS CONFIGURATION #####
