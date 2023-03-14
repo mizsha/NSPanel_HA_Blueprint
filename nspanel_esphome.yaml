@@ -12,7 +12,7 @@
   # device_name: "nspanel-name" # Wird im Blueprint benötigt!
   # wifi_ssid: !secret nspanel_wifi_ssid # add in your esphome secrets file.
   # wifi_password: !secret nspanel_wifi_password # add in your esphome secrets file. -> per default this is also used for ota_password and web_password
-  # ota_password: !secret nspanel_ota_password # add in your esphome secrets file. - manual change in code required to activate
+  # ota_password: !secret nspanel_ota_password # add in115200 your esphome secrets file. - manual change in code required to activate
   # web_password: !secret nspanel_web_password # add in your esphome secrets file. - manual change in code required to activate
   # api_password: !secret nspanel_api_password # add in your esphome secrets file. - manual change in code required to activate
   # nextion_update_url: !secret nspanel_update_url # add in your esphome secrets file. Example: "http://"HOME ASSISTANT IP":8123/local/nspanel/nspanel.tft"
@@ -58,6 +58,10 @@ external_components:
 esphome:
   name: ${device_name}
   min_version: 2022.10.2
+  platformio_options:
+    build_flags: 
+      - -DBOARD_HAS_PSRAM
+      - -mfix-esp32-psram-cache-issue
 
 ##### TYPE OF ESP BOARD #####
 esp32:
@@ -77,7 +81,7 @@ web_server:
 ota:
   password: ${wifi_password}
   ##### advanced config - change to use ota_password ##### 
-  # password: ${ota_password}
+  # password: ${ota_password}115200
   safe_mode: true
   reboot_timeout: 3min
   num_attempts: 3
@@ -108,7 +112,7 @@ rtttl:
 uart:
   tx_pin: 16
   rx_pin: 17
-  baud_rate: 115200
+  baud_rate: 19200
   id: tf_uart
   debug:
 
@@ -124,7 +128,7 @@ button:
 
 
 ##### START - API CONFIGURATION #####
-api:
+api:115200
   ##### advanced config - activate to use api_password ##### 
   # password: ${api_password}
   services:
@@ -345,14 +349,63 @@ globals:
 ##### START - BINARY SENSOR CONFIGURATION #####
 binary_sensor:
 
-  # Left button below the display
+  ###### LEFT BUTTON BELOW DISPLAY TO TOGGLE RELAY#####
   - platform: gpio
-    name: $device_name Left Button
+    # name: ${device_name} Left Button
+    id: left_button
     pin:
       number: 14
       inverted: true
     on_click:
-      - lambda: 'id(disp1)->upload_tft();'
+    - min_length: 50ms
+      max_length: 1000ms
+      then:
+        - binary_sensor.template.publish:
+            id: left_button_short
+            state: ON
+        - if:
+            condition:
+              and:
+                  - switch.is_on: relay1_fallback
+                  - not:
+                      api.connected:
+            then:
+              - switch.toggle: relay_1
+              - lambda: id(disp1).send_command_printf("home.icon_top_01.pic=51");
+              - lambda: id(disp1).send_command_printf("home.left_bt_pic.pic=98");
+              - if: 
+                  condition:
+                    switch.is_on: relay_1
+                  then:
+                    - lambda: id(disp1).send_command_printf("home.icon_top_01.pic=105");
+        - delay: 500ms
+        - binary_sensor.template.publish:
+            id: left_button_short
+            state: OFF
+    on_press:
+      then:
+        - lambda: |-
+            if (id(disp1_currentpage).state == "lightsettings" or id(disp1_currentpage).state == "coversettings") {
+              ESP_LOGD("nspanel", "settingspage -> no press");
+            } else {
+              // ESP_LOGD("nspanel", "release button");
+              id(disp1_lastclick_general).set_state("pressbuttonleft",true,true);
+            }
+    on_release:
+      then:
+        - lambda: |-
+            if (id(disp1_currentpage).state == "lightsettings" or id(disp1_currentpage).state == "coversettings") {
+              ESP_LOGD("nspanel", "settingspage -> no release");
+            } else {
+              // ESP_LOGD("nspanel", "release button");
+              id(disp1_lastclick_general).set_state("releasebuttonleft",true,true);
+            }
+
+  - platform: template
+    name: ${device_name} Left Button
+    id: left_button_short
+    lambda: |-
+      return {};
 
 
   ##### RIGHT BUTTON BELOW DISPLAY TO TOGGLE RELAY #####
