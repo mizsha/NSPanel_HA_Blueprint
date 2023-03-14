@@ -84,7 +84,7 @@ ota:
 
 ##### LOGGER #####
 logger:
- baud_rate: 0
+#  baud_rate: 0
  level: WARN
 
 ##### CONFIGURE INTERNAL BUZZER #####
@@ -106,7 +106,7 @@ uart:
   rx_pin: 17
   # baud_rate: 115200 
   id: tf_uart
-  debug: true
+  debug:
 
 ###### REBOOT BUTTON #####
 button:
