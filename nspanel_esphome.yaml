@@ -345,63 +345,14 @@ globals:
 ##### START - BINARY SENSOR CONFIGURATION #####
 binary_sensor:
 
-  ###### LEFT BUTTON BELOW DISPLAY TO TOGGLE RELAY#####
+  # Left button below the display
   - platform: gpio
-    # name: ${device_name} Left Button
-    id: left_button
+    name: $device_name Left Button
     pin:
       number: 14
       inverted: true
     on_click:
-    - min_length: 50ms
-      max_length: 1000ms
-      then:
-        - binary_sensor.template.publish:
-            id: left_button_short
-            state: ON
-        - if:
-            condition:
-              and:
-                  - switch.is_on: relay1_fallback
-                  - not:
-                      api.connected:
-            then:
-              - switch.toggle: relay_1
-              - lambda: id(disp1).send_command_printf("home.icon_top_01.pic=51");
-              - lambda: id(disp1).send_command_printf("home.left_bt_pic.pic=98");
-              - if: 
-                  condition:
-                    switch.is_on: relay_1
-                  then:
-                    - lambda: id(disp1).send_command_printf("home.icon_top_01.pic=105");
-        - delay: 500ms
-        - binary_sensor.template.publish:
-            id: left_button_short
-            state: OFF
-    on_press:
-      then:
-        - lambda: |-
-            if (id(disp1_currentpage).state == "lightsettings" or id(disp1_currentpage).state == "coversettings") {
-              ESP_LOGD("nspanel", "settingspage -> no press");
-            } else {
-              // ESP_LOGD("nspanel", "release button");
-              id(disp1_lastclick_general).set_state("pressbuttonleft",true,true);
-            }
-    on_release:
-      then:
-        - lambda: |-
-            if (id(disp1_currentpage).state == "lightsettings" or id(disp1_currentpage).state == "coversettings") {
-              ESP_LOGD("nspanel", "settingspage -> no release");
-            } else {
-              // ESP_LOGD("nspanel", "release button");
-              id(disp1_lastclick_general).set_state("releasebuttonleft",true,true);
-            }
-
-  - platform: template
-    name: ${device_name} Left Button
-    id: left_button_short
-    lambda: |-
-      return {};
+      - lambda: 'id(disp1)->upload_tft();'
 
 
   ##### RIGHT BUTTON BELOW DISPLAY TO TOGGLE RELAY #####
